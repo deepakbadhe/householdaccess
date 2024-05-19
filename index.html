@@ -1,37 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Form</title>
+  <title>Email Form</title>
 </head>
 <body>
-    <h2>Enter your Gmail address:</h2>
-    <input type="email" id="emailInput" placeholder="example@gmail.com">
-    <button onclick="submitEmail()">Submit</button>
-    <div id="responseContainer"></div>
+  <form id="emailForm">
+    <label for="emailInput">Email:</label>
+    <input type="email" id="emailInput" name="email" required>
+    <button type="submit">Submit</button>
+  </form>
 
-    <script>
-        function submitEmail() {
-            var email = document.getElementById('emailInput').value;
-            var scriptUrl = 'https://script.google.com/macros/s/AKfycbwFeSkxs1OX0tfooadoy19yB44GK1k3nNC4WzBtG25RTZiC6H3hxxZtwa0IvVTUt7uO/exec?email=' + encodeURIComponent(email);
-            fetch(scriptUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Display the response on the webpage
-                    var responseContainer = document.getElementById('responseContainer');
-                    responseContainer.innerHTML = 'Script response: ' + JSON.stringify(data);
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                    // Handle errors
-                });
-        }
-    </script>
+  <div id="message"></div>
+
+  <script>
+    document.getElementById("emailForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      var email = document.getElementById("emailInput").value;
+      var url = "https://script.google.com/macros/s/AKfycbyn0hw_CvVN7FZV2QzdlGzj6lgL44QLox8ylexMh8R_tGbIbgNb88_i0bOBUE-BmyoNog/exec?email=" + encodeURIComponent(email);
+
+      var scriptElement = document.createElement('script');
+      scriptElement.src = url;
+      document.body.appendChild(scriptElement);
+    });
+
+    // Function to handle the data returned by the script
+    window.loadData = function(data) {
+      console.log(data); // Log the data returned by the script
+
+      // Example: Update an HTML element with the returned data
+      var messageElement = document.getElementById("message");
+      if (messageElement) {
+        messageElement.textContent = "Response: " + JSON.stringify(data);
+      }
+    };
+  </script>
 </body>
 </html>
