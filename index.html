@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Form</title>
+</head>
+<body>
+    <h2>Enter your Gmail address:</h2>
+    <input type="email" id="emailInput" placeholder="example@gmail.com">
+    <button onclick="submitEmail()">Submit</button>
+    <div id="responseContainer"></div>
+
+    <script>
+        function submitEmail() {
+            var email = document.getElementById('emailInput').value;
+            var scriptUrl = 'https://script.google.com/macros/s/AKfycbwFeSkxs1OX0tfooadoy19yB44GK1k3nNC4WzBtG25RTZiC6H3hxxZtwa0IvVTUt7uO/exec?email=' + encodeURIComponent(email);
+            fetch(scriptUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Display the response on the webpage
+                    var responseContainer = document.getElementById('responseContainer');
+                    responseContainer.innerHTML = 'Script response: ' + JSON.stringify(data);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    // Handle errors
+                });
+        }
+    </script>
+</body>
+</html>
